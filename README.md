@@ -23,21 +23,21 @@ The model turns six gold-layer tables into a single semantic model that answers 
 3. Where do returns and fulfilment problems occur?
 4. Who buys, and through which channel?
 
-**Tools:** Databricks (ingestion and transformation), Power BI Desktop, DAX, Power Query (M).
+**Tools:** Azure Data Lake Storage Gen2, Databricks (ingestion and transformation), Power BI Desktop, DAX, Power Query (M).
 
 ## Pipeline
 
 ```
-Raw data ──▶ Databricks ingestion ──▶ Databricks transformations ──▶ Gold tables ──▶ Power BI ──▶ Report
-                                                                  (ecommerce.gold)   (Import mode)
+ADLS Gen2 ──▶ Databricks ingestion ──▶ Databricks transformations ──▶ Gold tables ──▶ Power BI ──▶ Report
+(raw files)                                                        (ecommerce.gold)   (Import mode)
 ```
 
-1. **Ingest:** raw ecommerce data is loaded into Databricks. The tables keep ingestion metadata (`ingest_timestamp`, `_ingested_at`, `_source_file`, `file_name`, `processed_time`) from this step.
+1. **Ingest:** raw ecommerce files are read from Azure Data Lake Storage Gen2 (ADLS Gen2) into Databricks. The tables keep ingestion metadata (`ingest_timestamp`, `_ingested_at`, `_source_file`, `file_name`, `processed_time`) from this step.
 2. **Transform:** the data is cleaned and reshaped in Databricks into analysis-ready gold tables (`gld_` prefix) in the `gold` schema of the `ecommerce` catalog.
 3. **Serve:** Power BI Desktop connects to the Databricks SQL warehouse and loads the gold tables in Import mode.
 4. **Model and report:** relationships, DAX measures and the report pages are built in Power BI on top of those tables.
 
-> **To complete:** add the raw data source, how ingestion runs (for example notebooks, Auto Loader or jobs), what transformations were applied (for example deduplication, type casting, joins), and any scheduling. These details are not in the Power BI model, so they need to come from you.
+> **To complete:** add how ingestion runs (for example notebooks, Auto Loader or jobs), what transformations were applied (for example deduplication, type casting, joins), whether bronze and silver layers sit before gold, and any scheduling. These details are not in the Power BI model, so they need to come from you.
 
 ## Data
 
@@ -113,8 +113,3 @@ Four pages, each answering one question:
 - **Discount scale.** `discount_pct` is stored in percentage points (0 to 44), so measures divide it by 100.
 - **Partial 2025.** 2025 has 8 months of orders, so year-over-year comparisons for 2025 are not like-for-like.
 
-## How to open this project
-
-1. Open the `.pbix` file in Power BI Desktop.
-2. The data comes from Databricks, so sign in to the Databricks SQL warehouse when prompted and refresh. You need access to the `ecommerce.gold` schema.
-3. Go to the Model view to inspect relationships, or the Report view for the pages.
