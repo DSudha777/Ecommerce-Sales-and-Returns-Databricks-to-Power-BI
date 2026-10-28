@@ -32,7 +32,7 @@ ADLS Gen2 ──▶ Databricks ingestion ──▶ Databricks transformations �
 (raw files)                                                        (ecommerce.gold)   (Import mode)
 ```
 
-1. **Ingest:** raw ecommerce files are read from Azure Data Lake Storage Gen2 (ADLS Gen2) into Databricks. The tables keep ingestion metadata (`ingest_timestamp`, `_ingested_at`, `_source_file`, `file_name`, `processed_time`) from this step.
+1. **Ingest:** raw ecommerce files are read from Azure Data Lake Storage Gen2 (ADLS Gen2) into Databricks. The tables keep ingestion metadata (`_metadata.file_path`, `_ingested_at`, `_source_file`) from this step.
 2. **Transform:** the data is cleaned and reshaped in Databricks into analysis-ready gold tables (`gld_` prefix) in the `gold` schema of the `ecommerce` catalog.
 3. **Serve:** Power BI Desktop connects to the Databricks SQL warehouse and loads the gold tables in Import mode.
 4. **Model and report:** relationships, DAX measures and the report pages are built in Power BI on top of those tables.
